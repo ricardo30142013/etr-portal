@@ -1,5 +1,11 @@
-document.getElementById("btnEntrar").addEventListener("click",function(){
+const btnEntrar = document.getElementById("btnEntrar");
 
-    alert("Bienvenido al Sistema ETR");
+if (btnEntrar) {
 
-});
+    btnEntrar.addEventListener("click", function () {
+
+        alert("Bienvenido al Sistema ETR");
+
+    });
+
+}
