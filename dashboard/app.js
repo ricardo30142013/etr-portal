@@ -32,7 +32,7 @@ Bienvenido al sistema administrativo del Equipo Táctico de Rescate La Vega.
 
 async function mostrarMiembros(){
 
-    const respuesta = await fetch("/api/miembros");
+    const respuesta = await fetch("https://etr-backend-99u9.onrender.com/api/miembros")
 
     const miembros = await respuesta.json();
 
@@ -252,8 +252,7 @@ document.addEventListener("click", async function(e){
 
         }
 
-        const respuesta = await fetch(
-           id ? `/api/miembros/${id}` : "/api/miembros",
+        const respuesta = await fetch("https://etr-backend-99u9.onrender.com/api/miembros")
            {
            method: id ? "PUT" : "POST",
 
@@ -293,7 +292,7 @@ document.addEventListener("click", async function(e){
 
     const id = e.target.dataset.id;
 
-    const respuesta = await fetch(`/api/miembros/${id}`);
+    const respuesta = await fetch("https://etr-backend-99u9.onrender.com/api/miembros")
 
     const miembro = await respuesta.json();
 
@@ -316,7 +315,7 @@ document.addEventListener("click", async function(e){
 
 async function cargarDashboard() {
 
-    const respuesta = await fetch("/api/miembros/total/registros");
+    const respuesta = await fetch("https://etr-backend-99u9.onrender.com/api/miembros")
 
     const datos = await respuesta.json();
 
@@ -339,7 +338,7 @@ document.addEventListener("click", async function(e){
 
     if(!confirmar) return;
 
-    const respuesta = await fetch(`/api/miembros/${id}`,{
+    const respuesta = await fetch("https://etr-backend-99u9.onrender.com/api/miembros")
 
         method:"DELETE"
 

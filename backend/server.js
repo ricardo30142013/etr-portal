@@ -5,8 +5,17 @@ console.log("SERVIDOR NUEVO - 12:00");
 const express = require("express");
 const session = require("express-session");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
+app.use(cors({
+    origin: [
+        "http://localhost:3000",
+        "https://beta.etrlavega.org"
+    ],
+    methods: ["GET","POST","PUT","DELETE"],
+    credentials: true
+}));
 console.log("Cargando rutas...");
 
 const authRoutes = require("./routes/auth");
