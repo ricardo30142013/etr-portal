@@ -20,6 +20,7 @@ console.log("Cargando rutas...");
 
 const authRoutes = require("./routes/auth");
 const miembrosRoutes = require("./routes/miembros");
+const uploadRoutes = require("./routes/upload");
 console.log("MIEMBROS ROUTE:", miembrosRoutes);
 
 console.log(authRoutes);
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", authRoutes);
 app.use("/api/miembros", miembrosRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.use(
     session({
