@@ -726,6 +726,30 @@ document.addEventListener("click", async function(e){
 
         document.getElementById("observaciones").value = miembro.observaciones || "";
 
+        document.getElementById("nacionalidad").value = miembro.nacionalidad || "";
+
+        document.getElementById("estado_civil").value = miembro.estado_civil || "";
+
+        document.getElementById("cargo").value = miembro.cargo || "";
+
+        document.getElementById("fecha_ingreso").value = miembro.fecha_ingreso || "";
+
+        document.getElementById("parentesco").value = miembro.parentesco || "";
+
+        document.getElementById("ocupacion").value = miembro.ocupacion || "";
+
+        document.getElementById("seguro_medico").value = miembro.seguro_medico || "";
+
+        document.getElementById("afiliacion").value = miembro.afiliacion || "";
+
+        document.getElementById("alergias").value = miembro.alergias || "";
+
+        document.getElementById("enfermedades").value = miembro.enfermedades || "";
+
+        document.getElementById("medicamentos").value = miembro.medicamentos || "";
+
+        document.getElementById("licencia_conducir").value = miembro.licencia_conducir || "";
+
         if(miembro.foto){
 
         document.getElementById("previewFoto").src = miembro.foto;
