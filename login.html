@@ -124,7 +124,7 @@ form.addEventListener("submit", async function(e){
 
     const password = document.getElementById("password").value;
 
-    const respuesta = await fetch("/api/login",{
+    const respuesta = await fetch("https://etr-backend-99u9.onrender.com/api/login", {
 
         method:"POST",
 
