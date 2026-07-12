@@ -3,257 +3,520 @@ const supabase = require("../supabase");
 
 const router = express.Router();
 
-/* ==========================
-   LISTAR MIEMBROS
-========================== */
+/* =====================================================
+   LISTAR TODOS LOS MIEMBROS
+===================================================== */
+
 router.get("/", async (req, res) => {
 
-    try {
+    try{
 
         const { data, error } = await supabase
-            .from("miembros")
-            .select("*")
-            .order("apellidos", { ascending: true });
 
-        if (error) {
+            .from("miembros")
+
+            .select("*")
+
+            .order("apellidos",{ascending:true});
+
+        if(error){
+
             console.error(error);
-            return res.status(500).json(error);
+
+            return res.status(500).json({
+
+                success:false,
+
+                mensaje:error.message
+
+            });
+
         }
 
         res.json(data);
 
-    } catch (err) {
+    }catch(err){
 
         console.error(err);
 
         res.status(500).json({
-            success: false
+
+            success:false,
+
+            mensaje:"Error interno del servidor."
+
         });
 
     }
 
 });
 
-/* ==========================
+/* =====================================================
    TOTAL DE MIEMBROS
-========================== */
+===================================================== */
 
-router.get("/total/registros", async (req, res) => {
+router.get("/total/registros", async (req,res)=>{
 
-    const { count, error } = await supabase
-        .from("miembros")
-        .select("*", { count: "exact", head: true });
+    try{
 
-    if (error) {
+        const { count, error } = await supabase
 
-        return res.status(500).json(error);
+            .from("miembros")
+
+            .select("*",{
+
+                count:"exact",
+
+                head:true
+
+            });
+
+        if(error){
+
+            console.error(error);
+
+            return res.status(500).json({
+
+                success:false,
+
+                mensaje:error.message
+
+            });
+
+        }
+
+        res.json({
+
+            total:count
+
+        });
+
+    }catch(err){
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            mensaje:"Error interno del servidor."
+
+        });
 
     }
 
-    res.json({
-        total: count
-    });
-
 });
 
-/* ==========================
-   OBTENER UN MIEMBRO
-========================== */
+/* =====================================================
+   OBTENER MIEMBRO POR ID
+===================================================== */
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req,res)=>{
 
-    const { data, error } = await supabase
+    try{
 
-        .from("miembros")
+        const { data, error } = await supabase
 
-        .select("*")
+            .from("miembros")
 
-        .eq("id", req.params.id)
+            .select("*")
 
-        .single();
+            .eq("id",req.params.id)
 
-    if(error){
+            .single();
 
-        return res.status(500).json(error);
+        if(error){
+
+            console.error(error);
+
+            return res.status(500).json({
+
+                success:false,
+
+                mensaje:error.message
+
+            });
+
+        }
+
+        res.json(data);
+
+    }catch(err){
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            mensaje:"Error interno del servidor."
+
+        });
 
     }
 
-    res.json(data);
+});
+
+/* =====================================================
+   REGISTRAR NUEVO MIEMBRO
+===================================================== */
+
+router.post("/", async (req,res)=>{
+
+    try{
+
+        const{
+
+            nombres,
+            apellidos,
+            cedula,
+            telefono,
+            correo,
+            direccion,
+
+            nacionalidad,
+            estado_civil,
+
+            fecha_nacimiento,
+
+            sexo,
+            tipo_sangre,
+
+            rango,
+            unidad,
+            cargo,
+            fecha_ingreso,
+
+            estado,
+
+            contacto_emergencia,
+            telefono_emergencia,
+            parentesco,
+            ocupacion,
+
+            seguro_medico,
+            afiliacion,
+            alergias,
+            enfermedades,
+            medicamentos,
+            licencia_conducir,
+
+            observaciones,
+
+            foto
+
+        } = req.body;
+
+        if(!nombres || !apellidos || !cedula){
+
+            return res.json({
+
+                success:false,
+
+                mensaje:"Complete los campos obligatorios."
+
+            });
+
+        }
+
+        const { data: existe } = await supabase
+
+            .from("miembros")
+
+            .select("id")
+
+            .eq("cedula",cedula)
+
+            .maybeSingle();
+
+        if(existe){
+
+            return res.json({
+
+                success:false,
+
+                mensaje:"Ya existe un miembro con esa cédula."
+
+            });
+
+        }
+
+        const { error } = await supabase
+
+            .from("miembros")
+
+            .insert([{
+
+                nombres,
+                apellidos,
+                cedula,
+                telefono,
+                correo,
+                direccion,
+
+                nacionalidad,
+                estado_civil,
+
+                fecha_nacimiento,
+
+                sexo,
+                tipo_sangre,
+
+                rango,
+                unidad,
+                cargo,
+                fecha_ingreso,
+
+                estado: estado || "ACTIVO",
+
+                contacto_emergencia,
+                telefono_emergencia,
+                parentesco,
+                ocupacion,
+
+                seguro_medico,
+                afiliacion,
+                alergias,
+                enfermedades,
+                medicamentos,
+                licencia_conducir,
+
+                observaciones,
+
+                foto
+
+            }]);
+
+        if(error){
+
+            console.error(error);
+
+            return res.json({
+
+                success:false,
+
+                mensaje:error.message
+
+            });
+
+        }
+
+        res.json({
+
+            success:true,
+
+            mensaje:"Miembro registrado correctamente."
+
+        });
+
+    }catch(err){
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            mensaje:"Error interno del servidor."
+
+        });
+
+    }
 
 });
 
-/* ==========================
+/* =====================================================
    ACTUALIZAR MIEMBRO
-========================== */
+===================================================== */
 
 router.put("/:id", async (req,res)=>{
 
-    const {
+    try{
 
-        nombres,
+        const{
 
-        apellidos,
-
-        cedula,
-
-        telefono,
-
-        fecha_nacimiento
-
-    } = req.body;
-
-    const { error } = await supabase
-
-        .from("miembros")
-
-        .update({
-
-            nombres,
-
-            apellidos,
-
-            cedula,
-
-            telefono,
-
-            fecha_nacimiento
-
-        })
-
-        .eq("id",req.params.id);
-
-    if(error){
-
-        console.log(error);
-
-        return res.json({
-
-            success:false
-
-        });
-
-    }
-
-    res.json({
-
-        success:true
-
-    });
-
-});
-
-/* ==========================
-   GUARDAR MIEMBRO
-========================== */
-router.post("/", async (req, res) => {
-
-    try {
-
-        const {
             nombres,
             apellidos,
             cedula,
             telefono,
-            fecha_nacimiento
+            correo,
+            direccion,
+
+            nacionalidad,
+            estado_civil,
+
+            fecha_nacimiento,
+
+            sexo,
+            tipo_sangre,
+
+            rango,
+            unidad,
+            cargo,
+            fecha_ingreso,
+
+            estado,
+
+            contacto_emergencia,
+            telefono_emergencia,
+            parentesco,
+            ocupacion,
+
+            seguro_medico,
+            afiliacion,
+            alergias,
+            enfermedades,
+            medicamentos,
+            licencia_conducir,
+
+            observaciones,
+
+            foto
+
         } = req.body;
 
-        const fechaNacimiento = fecha_nacimiento || null;
-
-        // Verificar cédula duplicada
-        const { data: existe } = await supabase
-            .from("miembros")
-            .select("id")
-            .eq("cedula", cedula)
-            .maybeSingle();
-
-        if (existe) {
-
-            return res.json({
-                success: false,
-                mensaje: "La cédula ya existe."
-            });
-
-        }
-
         const { error } = await supabase
-            .from("miembros")
-            .insert([
-                {
-                    nombres,
-                    apellidos,
-                    cedula,
-                    telefono,
-                    fecha_nacimiento: fechaNacimiento,
-                    estado: "ACTIVO"
-                }
-            ]);
 
-        if (error) {
+            .from("miembros")
+
+            .update({
+
+                nombres,
+                apellidos,
+                cedula,
+                telefono,
+                correo,
+                direccion,
+
+                nacionalidad,
+                estado_civil,
+
+                fecha_nacimiento,
+
+                sexo,
+                tipo_sangre,
+
+                rango,
+                unidad,
+                cargo,
+                fecha_ingreso,
+
+                estado,
+
+                contacto_emergencia,
+                telefono_emergencia,
+                parentesco,
+                ocupacion,
+
+                seguro_medico,
+                afiliacion,
+                alergias,
+                enfermedades,
+                medicamentos,
+                licencia_conducir,
+
+                observaciones,
+
+                foto
+
+            })
+
+            .eq("id",req.params.id);
+
+        if(error){
 
             console.error(error);
 
             return res.json({
-                success: false,
-                mensaje: error.message
+
+                success:false,
+
+                mensaje:error.message
+
             });
 
         }
 
         res.json({
-            success: true
+
+            success:true,
+
+            mensaje:"Miembro actualizado correctamente."
+
         });
 
-    } catch (err) {
+    }catch(err){
 
         console.error(err);
 
         res.status(500).json({
-            success: false,
-            mensaje: err.message
+
+            success:false,
+
+            mensaje:"Error interno del servidor."
+
         });
 
     }
 
 });
 
-/* ==========================
+/* =====================================================
    ELIMINAR MIEMBRO
-========================== */
+===================================================== */
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req,res)=>{
 
-    try {
+    try{
 
         const { error } = await supabase
-            .from("miembros")
-            .delete()
-            .eq("id", req.params.id);
 
-        if (error) {
+            .from("miembros")
+
+            .delete()
+
+            .eq("id",req.params.id);
+
+        if(error){
 
             console.error(error);
 
-            return res.json({
-                success: false,
-                mensaje: error.message
+            return res.status(500).json({
+
+                success:false,
+
+                mensaje:error.message
+
             });
 
         }
 
         res.json({
-            success: true
+
+            success:true,
+
+            mensaje:"Miembro eliminado correctamente."
+
         });
 
-    } catch (err) {
+    }catch(err){
 
         console.error(err);
 
         res.status(500).json({
-            success: false
+
+            success:false,
+
+            mensaje:"Error interno del servidor."
+
         });
 
     }
 
 });
+
+/* =====================================================
+   EXPORTAR ROUTER
+===================================================== */
 
 module.exports = router;
