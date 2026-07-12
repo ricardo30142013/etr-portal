@@ -219,6 +219,9 @@ router.post("/", async (req,res)=>{
 
         }
 
+        const fechaNacimiento = fecha_nacimiento || null;
+        const fechaIngreso = fecha_ingreso || null;
+
         const { data: existe } = await supabase
 
             .from("miembros")
@@ -257,7 +260,7 @@ router.post("/", async (req,res)=>{
                 nacionalidad,
                 estado_civil,
 
-                fecha_nacimiento,
+                fecha_nacimiento: fechaNacimiento,
 
                 sexo,
                 tipo_sangre,
@@ -265,7 +268,7 @@ router.post("/", async (req,res)=>{
                 rango,
                 unidad,
                 cargo,
-                fecha_ingreso,
+                fecha_ingreso: fechaIngreso,
 
                 estado: estado || "ACTIVO",
 
@@ -331,6 +334,8 @@ router.post("/", async (req,res)=>{
 
 router.put("/:id", async (req,res)=>{
 
+    const fechaNacimiento = fecha_nacimiento || null;
+    const fechaIngreso = fecha_ingreso || null;
     try{
 
         const{
@@ -345,7 +350,7 @@ router.put("/:id", async (req,res)=>{
             nacionalidad,
             estado_civil,
 
-            fecha_nacimiento,
+            fecha_nacimiento: fechaNacimiento,
 
             sexo,
             tipo_sangre,
@@ -391,7 +396,7 @@ router.put("/:id", async (req,res)=>{
                 nacionalidad,
                 estado_civil,
 
-                fecha_nacimiento,
+                fecha_nacimiento: fechaNacimiento,
 
                 sexo,
                 tipo_sangre,
@@ -399,7 +404,7 @@ router.put("/:id", async (req,res)=>{
                 rango,
                 unidad,
                 cargo,
-                fecha_ingreso,
+                fecha_ingreso: fechaIngreso,
 
                 estado,
 
